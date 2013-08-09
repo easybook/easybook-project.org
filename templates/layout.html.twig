@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app.parameters.title }}{% endblock %}</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/favicon.png"/>
+    {% block head %}{% endblock %}
+    
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-82842-9']);
+        _gaq.push(['_trackPageview']);
+        
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</head>
+
+<body id="{% block body_id %}{% endblock %}">
+    <div id="header" class="container">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <a class="brand" href="{{ path('homepage') }}" title="{{ app.parameters.title }}">easybook</a>
+                <ul class="nav">
+                    <li><a class="documentation" href="{{ path('documentation') }}">Documentation</a></li>
+                    <li><a class="blog" href="{{ path('blog') }}">Blog</a></li>
+                    <li><a class="about" href="{{ path('about') }}">About Us</a></li>
+                    <li><a class="contact" href="{{ path('contact') }}">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% block heading %}
+    <div id="heading">
+        <div class="container">
+            <h1>{{ block('title') }}</h1>
+        </div>
+    </div>
+    {% endblock %}
+
+    <div class="container">
+        <div id="content" class="row">
+        {% block contents %}
+        {% endblock %}
+        </div>
+    </div>
+
+    <div id="footer" class="container">
+        <p>&copy; {{ 'now'|date('Y') }} easybook - Developed by <a href="http://javiereguiluz.com">Javier Eguiluz</a> using the <a href="http://symfony.com/components">Symfony components</a></p>
+    </div>
+
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

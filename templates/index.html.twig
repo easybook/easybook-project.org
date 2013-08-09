@@ -1,0 +1,74 @@
+{% extends 'layout.html.twig' %}
+
+{% block body_id 'home' %}
+
+{% block heading %}
+<div id="what">
+    <div class="container">
+        <div class="row">
+            <div class="span6">
+                <h1>easybook</h1>
+                <p id="tagline">&laquo; book publishing as easy as it should be &raquo;</p>
+                <p id="cta">
+                    <a class="btn btn-primary btn-large" href="{{ path('download') }}">Free Download</a>
+                    <a class="btn btn-large" href="{{ path('documentation') }}">Documentation</a>
+                    <a class="btn btn-large" href="{{ app.parameters.urls.github_repository }}">Github</a>
+                </p>
+            </div>
+            <div class="span6"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block contents %}
+<div class="span12">
+    <p id="alert"><strong>easybook</strong> does not replace Microsoft Word or LibreOffice Writer. You must be computer literate for using this application.</p>
+
+    <div id="features">
+        <div class="row">
+            <div class="span6">
+                <h2><em>1.</em> <strong>blazing fast</strong></h2>
+                <p>700 page ebook published in 4 seconds (that's 6 times faster than most of our competition)</p>
+            </div>
+            <div class="span6">
+                <h2><em>2.</em> <strong>pretty by default</strong></h2>
+                <p>Publish stunning PDF books, websites and e-books effortlessly.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span6">
+                <h2><em>3.</em> <strong>open-source</strong></h2>
+                <p>Released under MIT open source license. Free to use, free to modify, and free-to-everything!</p>
+            </div>
+            <div class="span6">
+                <h2><em>4.</em> <strong>standards-based</strong></h2>
+                <p>Books are designed with HTML5, CSS3 and Twig. Robust, modern and standard.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span6">
+                <h2><em>5.</em> <strong>works everywhere</strong></h2>
+                <p>Linux? Windows? Mac OS X? It doesn't matter. easybook just works everywhere.</p>
+            </div>
+            <div class="span6">
+                <h2><em>6.</em> <strong>fully customizable</strong></h2>
+                <p>Easily tweak every book detail, from chapter labels to table of contents margins.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span6">
+                <h2><em>7.</em> <strong>really easy</strong></h2>
+                <p>No setup. No configuration. No learning requirements. Download and use it in less than a minute.</p>
+            </div>
+            <div class="span6">
+                <h2><em>8.</em> <strong>documented</strong></h2>
+                <p>From publishing a simple book to modifying internals. Everything is explained in <a href="{{ path('documentation') }}">the documentation</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'layout.html.twig' %}
+
+{% block body_id 'blog_show' %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block heading %}
+<section id="heading">
+    <div class="container">
+        <h1>Blog</h1>
+    </div>
+</section>
+{% endblock %}
+
+{% block contents %}
+<div class="span9">
+    <h2>{{ post.title }}</h2>
+    {{ post.content|raw }}
+</div>
+
+<div class="span3">
+    {{ include('_sidebar_promo.html.twig') }}
+</div>
+{% endblock %}

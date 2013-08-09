@@ -1,0 +1,62 @@
+{% extends 'layout.html.twig' %}
+
+{% block body_id 'download' %}
+{% block title %}Download{% endblock %}
+
+{% block contents %}
+<div class="span12">
+    <p class="lead"><strong>easybook</strong> can be downloaded in <strong>three different ways</strong> depending upon your needs:</p>
+
+    <div class="row alternative">
+        <h2 class="span12">ZIP file</h2>
+
+        <ul class="span3">
+            <li>The <strong>easiest</strong> method.</li>
+            <li>Ideal to try easybook as fast and easy as possible.</li>
+            <li>You cannot upgrade.</li>
+        </ul>
+
+        <div class="span8 offset1">
+            <h3>Instructions</h3>
+            <p>Download the following ZIP file an uncompress it in any directory:</p>
+            <p id="cta"><a class="btn btn-primary btn-large" href="{{ app.parameters.urls.zip_download }}">easybook.zip (3MB)</a></p>
+        </div>
+    </div>
+
+    <div class="row alternative">
+        <h2 class="span12">Composer installation</h2>
+
+        <ul class="span3">
+            <li>The <strong>recommended</strong> method.</li>
+            <li>Composer must be previously installed.</li>
+            <li>Easy to use and upgrade.</li>
+        </ul>
+
+        <div class="span8 offset1">
+            <h3>Instructions</h3>
+            <p><strong>1.</strong> Create a directory named <code>easybook</code></p>
+            <p><strong>2.</strong> Initialize the project and download all its dependencies executing the following command:</p>
+            <pre class="cli">$ php composer.phar create-project easybook/easybook easybook/</pre>
+        </div>
+    </div>
+
+    <div class="row alternative">
+        <h2 class="span12">Git installation</h2>
+
+        <ul class="span3">
+            <li>The <strong>advanced</strong> method.</li>
+            <li>Ideal to hack and modify easybook</li>
+        </ul>
+
+        <div class="span8 offset1">
+            <h3>Instructions</h3>
+            <p><strong>1.</strong> Clone the <code>easybook</code> repository:</p>
+            <pre class="cli">$ mkdir easybook
+$ git clone {{ app.parameters.urls.github_repository }} easybook/</pre>
+            <p><strong>2.</strong> Download the vendors and dependencies:</p>
+            <pre class="cli">$ cd easybook/
+$ php composer.phar install</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}

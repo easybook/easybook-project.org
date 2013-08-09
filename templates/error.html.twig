@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block body_id 'error' %}
+{% block title %}{{ "Error #{code}" }}{% endblock %}
+
+{% block contents %}
+<div class="span12">
+{% if 404 == code %}
+    <p>We couldn't find the requested page. Please, check that the URL is correct.</p>
+{% else %}
+    <p>There was an internal server error.</p>
+{% endif %}
+
+<p>If the error persists, please notify us by using the <a href="{{ path('contact') }}">contact page</a></p>
+</div>
+{% endblock %}

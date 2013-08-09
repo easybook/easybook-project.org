@@ -1,0 +1,475 @@
+# -
+#     title: ''
+#     date:  'YYYY-MM-DD'
+#     content: |
+#         Lorem ipsum dolor sit amet.
+
+###############################################################################
+
+-
+    title: 'easybook improves the code listings for technical books'
+    date:  '2013-08-08'
+    content: |
+        **easybook** is mostly used to publish tech books about programming.
+        In these kind of books, proper handling of code listings are very
+        important. The problem is that developers cannot agree on what code
+        block style should be used. For that reason, **easybook** now supports
+        the three most used code block styles:
+
+        **1)** `easybook`, this is the default style and it's based on the
+        traditional 4-spaces or tab indentation of code blocks. The difference is 
+        that now you can explicitely set the programming language of the code
+        block by adding the `[language-name]` tag to the first line:
+
+        ~~~
+            [php]
+            $lorem = 'ipsum';
+            // ...
+        ~~~
+
+        **2)** `fenced`, this is the style defined by PHP Markdown library:
+
+          * Define the start of the code block with at least three `~~~`
+          * Optionally set the programming language name, prefixing it with a dot.
+          * Include the code without any indentation.
+          * Define the end of the code block using the same number of `~~~` as the opening.
+
+        Examples:
+
+        ~~~
+         ~~~ .php
+         $lorem = 'ipsum';
+         // ...
+         ~~~
+        ~~~
+
+        ~~~
+         ~~~~~~~~~~~~~~~~~~~~~~ .php
+         $lorem = 'ipsum';
+         // ...
+         ~~~~~~~~~~~~~~~~~~~~~~
+        ~~~
+
+        ~~~
+         ~~~
+         some generic code
+         without a programming language
+         ~~~
+        ~~~
+
+        **3)** `github`, this is the style used by GitHub and it's very similar
+        to the fenced style. Instead of three tildes, use three backticks:
+
+        ~~~
+         ```php
+         $lorem = 'ipsum';
+         // ...
+         ```
+        ~~~
+
+        ~~~
+        ```
+        some generic code
+        without a programming language
+        ```
+        ~~~
+
+        You can use any code block type, but a given book can only use one
+        type. The default type (`easybook`) maintains backward compatibility
+        and it's easy to use. The problem is that the code must be indented
+        and therefore, there cannot be empty lines without leading tabs or
+        spaces. This is a **huge problem** with editors that remove tabs and
+        white spaces in empty lines.
+
+        This code will be wrongly parsed:
+
+        ~~~
+          [php]
+          $lorem = 'ipsum';
+
+          $another_lipsum = 'ipsum';
+          // ...
+        ~~~
+
+        The same code, without empty lines, works perfectly:
+
+        ~~~
+          [php]
+          $lorem = 'ipsum';
+          $another_lipsum = 'ipsum';
+          // ...
+        ~~~
+
+        The other two code block types work perfectly whatever the code you write.
+        As this is a global **easybook** configuration parameter, if you use `fenced`
+        or `github` code blocks, you must configure it in the book's `config.yml`.
+        Copy and paste the following configuration as an example:
+
+        ~~~ .yaml
+            easybook:
+                parameters:
+                    parser.options:
+                        code_block_type: fenced
+                        # alternatively, you can also use:
+                        # code_block_type: github
+
+            book:
+                title:  ...
+                # ...
+        ~~~
+
+        You can also check out the [doc/easybook-doc-en/config.yml](https://github.com/javiereguiluz/easybook/blob/master/doc/easybook-doc-en/config.yml)
+        file and the [doc/easybook-doc-en/Contents/*](https://github.com/javiereguiluz/easybook/tree/master/doc/easybook-doc-en/Contents)
+        files for an example of how to use fenced code blocks.
+
+        If you are a developer, these are the specific commits that added
+        code block type support:
+
+          * [e1141e3](https://github.com/javiereguiluz/easybook/commit/e1141e35234217b787c505b4f5adb19d5f185570) Improved the way books can include code listings.
+          * [7dbb7f6](https://github.com/javiereguiluz/easybook/commit/7dbb7f66cb8673e111cc1ad068c70abb0a8de16c) Added unit tests for the new code block type feature
+          * [9a22998](https://github.com/javiereguiluz/easybook/commit/9a22998176be5a02e111555ecd408edac1a30efa) Updated the official documentation to use the new fenced code blocks
+
+###############################################################################
+
+-
+    title: 'easybook improves the book publishing workflow'
+    date:  '2012-12-08'
+    content: |
+        Publishing a digital book usually involves more than the actual publication
+        of the book. Sometimes you have to update the book contents before publishing
+        it by downloading the contents from a remote server. Other times, you have
+        to copy the published book into another directory or have to notify some other
+        system about the publication.
+
+        **easybook** simplifies all these tasks with the new `before_publish` and
+        `after_publish` options. These options are modeled after the popular
+        Travis `before_script` and `after_script` options and allow you to
+        execute commands before or after book publishing without the need to
+        define a custom plugin or script.
+
+        Each option admit an array of commands that are executed sequentially:
+
+        ~~~ .yaml
+        book:
+            title: '...'
+            # ...
+
+            editions:
+                # ...
+
+                website:
+                    format:      html_chunked
+                    chunk_level: 2
+                    # ...
+
+                    before_publish:
+                        - echo "This command is executed before book publishing"
+                        - git pull ...
+                        - cp ...
+
+                    after_publish:
+                        - "/home/user/scripts/notify_book_publish.sh"
+                        - "/home/user/scripts/update_google_sitemap_xml.sh"
+        ~~~
+
+        If you only need to execute one command, you can replace the array for
+        a simple string:
+
+        ~~~ .yaml
+        book:
+            # ...
+
+            editions:
+
+                website:
+                    # ...
+                    before_publish: "cd ... && git pull"
+                    after_publish:  "/home/user/scripts/notify_book_publish.sh"
+        ~~~
+
+###############################################################################
+
+-
+    title: 'easybook can now publish books as websites'
+    date:  '2012-11-03'
+    content: |
+        **easybook** has ben able to publish books as websites from the very
+        beginning. Nevertheless, the resulting websites were pretty flat, because
+        every book item (e.g. a chapter) was published in a single HTML page:
+
+        ![Old easybook websites were flat](/images/easybook_flat_website.png)
+
+        If the book chapters are long, the resulting websites were difficult to
+        read or to link to an specific section. For that reason, **easybook**
+        now defines a new `chunk_level` option for the `html_chunked` editions:
+
+        ~~~ .yaml
+        book:
+            # ...
+            editions:
+                my_edition:
+                    format:      html_chunked
+                    chunk_level: 2  # only 1 and 2 are allowed
+        ~~~
+
+        The value of this option sets the heading level used to split the contents
+        of the book. Its default value is `1` and means that `<h1>` headings are
+        used to split the book into pieces. The result will be a website with a
+        single HTML page for each content.
+
+        If you change the value of the `chunk_level` option to `2`, **easybook**
+        will use both `<h1>` and `<h2>` headings to split the book into pieces.
+        The result will be a website with lots of HTML pages and easier to
+        navigate for long books. The following image shows the website generated by
+        the same book as above, but with a `chunk_level` option set to `2`:
+
+        ![New easybook websites are nested](/images/easybook_nested_website.png)
+
+        If you are a developer, these are the specific commits that added
+        chunked websites support:
+
+          * [094a818](https://github.com/javiereguiluz/easybook/commit/094a81876f79d09ee5d2893b6784c4f21119a77e) [WIP] Added a new 'chunk_level' option to 'html_chunked' format.
+          * [5f15f3b](https://github.com/javiereguiluz/easybook/commit/5f15f3bdf03706f597b64d79a6f4789a0d0d0a5e) [WIP] Tweaked the chunk process for books published as websites
+          * [33fdd00](https://github.com/javiereguiluz/easybook/commit/33fdd006878ca2b895c3b7aa49124e4c5d9207e4), [d7b82eb](https://github.com/javiereguiluz/easybook/commit/d7b82ebe9c117a5667a98d9255034352741ac1fc) Fixed the navigation of books published as websites
+
+###############################################################################
+
+-
+    title: 'Introduction to easybook at Symfony Live 2012 San Francisco'
+    date:  '2012-09-28'
+    content: |
+        Hugo Hamon, head of training at SensioLabs and one of the most popular
+        Symfony community members, gave a short introduction to **easybook**
+        at the *unconference* of the Symfony Live 2012 San Francisco conference:
+
+        <script async class="speakerdeck-embed" data-id="506610d5e64bdf0002021f5a" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+        Don't forget to check out the other [presentations of Hugo](https://speakerdeck.com/hhamon)
+        about PHP, best practices, design patterns, etc.
+
+###############################################################################
+
+-
+    title: 'easybook adds dynamic configuration options'
+    date:  '2012-08-20'
+    content: |
+        **easybook** is the most configurable publishing platform, as it allows you to define as many new options as you need.
+        There are no limits and no restrictions in the amount or type of configuration options that you can define.
+
+        **easybook** for example doesn't include a configuration option for setting the book price. If you need it, just add a
+        new `price` option under `book` key:
+
+        ~~~ .yaml
+        # config.yml
+        book:
+            title:  "..."
+            author: "..."
+            price:  10
+            # ...
+        ~~~
+
+        Now you can display the book price anywhere inside your book just by adding `{{ book.price }}` expression in any template.
+        Of course you can freely choose the name of the option (`price`) and its value:
+
+        ~~~ .yaml
+        # config.yml
+        book:
+            # ...
+            price: 10                    # integer
+            price: 9.95                  # float 
+            price: "$10"                 # string
+            price: "10 euros"            # long string
+            price: "{{ 8 * 1.20 + 2 }}"  # Twig expression
+        ~~~
+
+         Despite this flexibility, sometimes it's not possible or convenient to set configuration options in the `config.yml` file.
+         Imagine for example that to discourage piracy, you want to display the name of the buyer in every book page.
+         Due to its nature, you cannot set the person name statically in the configuration file:
+
+        ~~~ .yaml
+        # config.yml
+        book:
+            # ...
+            buyer:  "..."
+        ~~~
+
+        **easybook** now supports configuration options set dynamically via `--configuration` command option. These options
+        override any other configuration option and must be set as a JSON formatted string:
+
+        ~~~ .cli
+        $ ./book publish my-book web
+                 --configuration='{ "book": { "title": "My new title" } }'
+
+        $ ./book publish my-book print
+                 --configuration='{ "book": { "buyer": "John Smith" } }'
+        ~~~
+
+        You can also set any edition option dynamically:
+
+        ~~~ .cli
+        $ ./book publish my-book web
+        --configuration='{ "book": { "editions": { "web": { "highlight_code": true } } } }'
+        ~~~
+
+        Dynamic options are so powerful that you can even define new editions *on-the-fly*, setting their names and options via console command.
+
+        ### Technical details ###
+
+        Our first choice for implementing this feature was obviously to use the new [Options Resolver](https://github.com/symfony/OptionsResolver) component published by Symfony. It's a simple but powerful library to configure objects with option arrays. It also supports different levels of hierarchy, default values and option constraints.
+
+        After some code refactoring for Options Resolver component, we found two major drawbacks:
+
+          * It doesn't fit applications that allow users to define as many new options as they want.
+          * It doesn't resolve options recursively.
+
+        The first problem can be solved by setting as optional any option defined by the user:
+
+        ~~~ .php
+        $resolver = new \Symfony\Component\OptionsResolver\OptionsResolver();
+        $resolver->setOptional(array_keys($optionsDefinedByUser ?: array()));
+        ~~~
+
+        Unfortunately, we couldn't solve the second problem and this was the blocker that prevented us from using Options Resolver component. Then, what did we use instead of the Symfony component?
+
+        ~~~ .php
+        $config = array_replace_recursive(
+            $defaultConfig,  # easybook default config values
+            $fileConfig,     # options set by the user in config.yml file
+            $commandConfig   # options set dynamically via --configuration
+        );
+        ~~~
+
+        Symfony components are usually the best choice, but don't forget that PHP has thousands of useful built-in functions. In our case, `array_replace_recursive()` fulfills our needs with just a single function call.
+
+        You can check all the tecnical details in [b9bb558196](https://github.com/javiereguiluz/easybook/commit/b9bb55819674440f4c43ad5701f3ea926453db35) GitHub commit, where you'll also find a lot of new [unit tests related to dynamic configuration options](https://github.com/javiereguiluz/easybook/tree/master/src/Easybook/Tests/Configurator).
+
+###############################################################################
+
+-
+    title: 'Publishing a 700 page e-book in 4 seconds with easybook'
+    date:  '2012-07-05'
+    content: |
+        We are obsessed about making **easybook** the fastest tool to publish
+        digital books. This video demonstrates how easybook can publish a 700 page
+        e-book in just 4 seconds using an old 2010 MacBook Pro.
+
+        <iframe width="560" height="315" src="http://www.youtube.com/embed/vtpUqPKyY7M?rel=0" frameborder="0" allowfullscreen></iframe>
+
+###############################################################################
+
+-
+    title: 'easybook switches to MIT license'
+    date:  '2012-02-23'
+    content: |
+        In the world of Free and Open Source Software (FOSS) there are nearly as many
+        different licenses as projects ([view the full license list](http://www.spdx.org/licenses/)).
+        True to this tradition, **easybook** was published under its own [custom
+        license](https://github.com/javiereguiluz/easybook/blob/b54c2edb4aac9b559e520cf2aa4cf84a30749df9/LICENSE.md).
+
+        However, after reading your comments and critics about this license, we've
+        reconsidered our decission. Therefore, as of [commit 78f08f25](http://github.com/javiereguiluz/easybook/commit/78f08f25ce777349d03e9d83c5f00f3519446c9b)
+        **easybook** no longer uses a custom license, but a pure **MIT License**.
+        Wikipedia describes the MIT License as:
+
+            It is a permissive free software license, meaning that it permits reuse
+            within proprietary software provided all copies of the licensed software
+            include a copy of the MIT License terms. Such proprietary software retains
+            its proprietary nature even though it incorporates software under the MIT
+            License.
+
+            The license is also GPL-compatible, meaning that the GPL permits
+            combination and redistribution with software that uses the MIT License.
+
+        We reproduce bellow the full legal content of this license.
+
+            Copyright (c) 2012 easybook / Javier Eguiluz
+
+            Permission is hereby granted, free of charge, to any person obtaining a copy of
+            this software and associated documentation files (the "Software"), to deal in
+            the Software without restriction, including without limitation the rights to
+            use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+            the Software, and to permit persons to whom the Software is furnished to do so,
+            subject to the following conditions: 
+
+            The above copyright notice and this permission notice shall be included in all
+            copies or substantial portions of the Software. 
+
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+            THE SOFTWARE.
+
+
+###############################################################################
+
+-
+    title: 'easybook adds EPUB support'
+    date:  '2012-02-21'
+    content: |
+        When we introduced the **easybook** project a few days ago, we promised
+        that supporting the publication of `.ePub` books would be one of our
+        highest priorities. Today we're glad to introduce the new `.ePub` book
+        format for **easybook**:
+
+        ![easybook documentation published as an epub book](/images/easybook_epub_format_support.png)
+
+        Specifically, easybook generates `ePub 2` books, which is the most compatible
+        version for the current e-book readers. The work on `ePub 3` support will start
+        when most ebook readers support it.
+
+        Unfortunately, if you use a Kindle reader, you won't be able to read these
+        ePub books. Kindle readers use a much more complex format called `MOBI`,
+        which will be supported by **easybook** in the long term.
+
+        If you are a developer, these are the specific commits that added ePub support:
+
+          * [7b89d9c](https://github.com/javiereguiluz/easybook/commit/7b89d9c282f16a382cfde69fa90470d50af795c9) [WIP] added ePub support
+          * [83e974c](https://github.com/javiereguiluz/easybook/commit/83e974cec8165a7e56a54ea86ce36481bd488316) Completed ePub publication integration
+          * [81024f0](https://github.com/javiereguiluz/easybook/commit/81024f025fdb69826dc7b467e4f16c525793291a) Finished ePub integration and updated the documentation
+
+###############################################################################
+
+-
+    title: 'easybook reaches the front page of Hacker News'
+    date:  '2012-02-08'
+    content: |
+        If you are as geek as us, [Hacker News](http://news.ycombinator.com/)
+        site is probably a reference for you. We visit this site daily and today
+        we were really surprised to have **easybook** in the homepage of Hacker
+        News:
+
+        ![easybook on the Hacker News frontpage](/images/easybook_on_hacker_news_frontpage.png)
+
+        For reference purposes, here it is the cached version of the page when
+        **easybook** reached the frontpage: [hhn.domador.net/2012/02/08/15/](http://hhn.domador.net/2012/02/08/15/)
+
+        We're really glad to read [your comments](https://news.ycombinator.com/item?id=3568637) about **easybook**
+        and we thank our friend [old_sound](https://twitter.com/old_sound) for
+        sending this article to Hacker News.
+
+###############################################################################
+
+-
+    title: 'easybook project launches'
+    date:  '2012-02-07'
+    content: |
+        After several years of using **easybook** privately to publish my books,
+        today I've decided to transform **easybook** into a public project.
+
+        In my opinion, the current book publishing tools are both slow and
+        cumbersome. I think that writing, formatting and publishing a digital
+        book should be much easier. For that reason, our official tagline
+        describes our purpose:
+
+        > **easybook**, book publishing as easy as it should be
+
+        **easybook** still lacks lots of the features we want it to have, but
+        they will be added in the comming months. EPUB book publication, MOBI
+        format support for Kindle readers and full-featured themes are some
+        of the features that we are currently working on.
+
+        For reference purposes, this is the [first commit of easybook project](https://github.com/javiereguiluz/easybook/commit/b54c2edb4aac9b559e520cf2aa4cf84a30749df9). Beware of this link,
+        because the commit is massive and it could hang your web browser.
