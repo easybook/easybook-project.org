@@ -132,6 +132,99 @@
 ###############################################################################
 
 -
+    title: 'Books can now override any easybook global parameter'
+    date:  '2013-07-06'
+    content: |
+        **easybook** defines several global configuration parameters to modify
+        its behaviour. However, setting custom values for those parameters was
+        a difficult and cumbersome process that involved creating a new plugin.
+
+        Now you can easily tweak **easybook** behaviour from your own book's
+        `config.yml` file. To do so, create a new `easybook` configuration block
+        as show bellow:
+
+        ~~~ .yaml
+        easybook:
+            parameters:
+                # here you can set new values for the
+                # easybook global parameters
+
+        book:
+            title:  'Your title'
+            # ...
+        ~~~
+
+        Using this new configuration block is easy for example to set the path
+        of the `kindlegen` utility needed to generate Kindle-compatible MOBI
+        books:
+
+        ~~~ .yaml
+        easybook:
+            parameters:
+                kindlegen.path: '/path/to/utils/KindleGen/kindlegen'
+                # ...
+        ~~~
+
+        Similarly, you can modify the value of any global configuration parameter
+        to suit your specific needs:
+
+        ~~~ .yaml
+        easybook:
+            parameters:
+                kindlegen.command_options: '-c0 -gif verbose'
+                kindlegen.path:            '/path/to/utils/KindleGen/kindlegen'
+                publishing.dir.output:     '/my/path/for/books/my-book'
+                slugger.options:
+                    separator:             '_'
+
+        book:
+            title:   easybook documentation
+            author:  Javier Eguiluz
+            # ...
+        ~~~
+
+        The following list shows the current configuration parameters available
+        and their default values:
+
+        ~~~ .php
+        'app.debug'      => false,
+        'app.charset'    => 'UTF-8',
+        'app.name'       => 'easybook',
+
+        'parser.options' => array(
+            'markdown_syntax' => 'easybook',
+            'code_block_type' => 'easybook',
+        ),
+
+        'prince.path'    => null,
+        'prince.default_paths' => array(
+            '/usr/local/bin/prince',
+            '/usr/bin/prince',
+            'C:\Program Files\Prince\engine\bin\prince.exe'
+        ),
+
+        'kindlegen.path' => null,
+        'kindlegen.default_paths' => array(
+            '/usr/local/bin/kindlegen',
+            '/usr/bin/kindlegen',
+            'c:\KindleGen\kindlegen'
+        ),
+        'kindlegen.command_options' => '-c1',
+
+        'slugger.options' => array(
+            'separator' => '-',
+            'prefix'    => '',
+        ),
+        ~~~
+
+        If you are a developer, this is the commit that added global parameter
+        configuration:
+
+          * [c32669e](https://github.com/javiereguiluz/easybook/commit/c32669eea9a8890364ff1f0947b9004ea3a972d4) Books can now override any easybook global parameter.
+
+###############################################################################
+
+-
     title: 'easybook improves the book publishing workflow'
     date:  '2012-12-08'
     content: |
@@ -246,6 +339,52 @@
 
         Don't forget to check out the other [presentations of Hugo](https://speakerdeck.com/hhamon)
         about PHP, best practices, design patterns, etc.
+
+###############################################################################
+
+-
+    title: 'easybook improves the publication of technical books'
+    date:  '2012-09-26'
+    content: |
+        **easybook** is mainly used to publish tecnical books about programming.
+        These books usually contain hundreds to thousands of code listings. In
+        order to improve their legibility, it's important to highlight their code.
+
+        **easybook** highlights the code listings out-of-the-box and without
+        requiring any special installation or configuration. To do so, **easybook**
+        uses the popular [GeSHi library](http://qbnz.com/highlighter/). The problem
+        is that code highlighting is a slow process. This means that publishing
+        a book with hundreds of code listings will take too much time.
+
+        Fortunately, book editions can now set the new `highlight_cache` option
+        to cache any highlighted code listing. This means that the first time a
+        book is published it will be slow, but the next times it will be really
+        fast:
+
+        ~~~ .yaml
+        book:
+            title: '...'
+            # ...
+
+            editions:
+                print:
+                    format:          pdf
+                    highlight_code:  true
+                    highlight_cache: true
+                    # ...
+        ~~~
+
+        The first benchmarks are very promising: publishing a 700-page PDF
+        book with thousands of highlighted code lines went from 60 seconds to
+        4 seconds (this means a 93% reduction of the publication time).
+
+        Keep in mind that this cache is disabled by default because it's only
+        useful for complex/long books that are regenerated regularly.
+
+        If you are a developer, this is the specific commits that added
+        code highlighting cache:
+
+          * [55120c4](https://github.com/javiereguiluz/easybook/commit/55120c4d666abb5ef0c4fe8f3c9a68507b907470) Introduced a cache for code highlighting (and this is [the specific code](https://github.com/javiereguiluz/easybook/commit/55120c4d666abb5ef0c4fe8f3c9a68507b907470#L8L603) of the cache system).
 
 ###############################################################################
 
