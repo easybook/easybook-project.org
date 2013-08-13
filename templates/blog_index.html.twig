@@ -7,7 +7,10 @@
 <div class="span9">
 {% for post in posts %}
     <div class="post">
-        <h2><a href="{{ path('blog_show', { 'slug': post.slug }) }}">{{ post.title }}</a></h2>
+        <h2>
+            <a href="{{ path('blog_show', { 'slug': post.slug }) }}">{{ post.title }}</a>
+            <small>{{ post.published_at|date('F jS, Y') }}</small>
+        </h2>
         {% if post.content|length > 4 * 1024 %}
             <p>{{ post.content|striptags[:512]|raw }} [...]</p>
             <a href="{{ path('blog_show', { 'slug': post.slug }) }}">Continue reading</a>

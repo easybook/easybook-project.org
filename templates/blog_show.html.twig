@@ -13,7 +13,7 @@
 
 {% block contents %}
 <div class="span9">
-    <h2>{{ post.title }}</h2>
+    <h2>{{ post.title }} <small>{{ post.published_at|date('F jS, Y') }}</small></h2>
     {{ post.content|raw }}
 </div>
 
