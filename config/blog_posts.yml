@@ -132,6 +132,31 @@
 ###############################################################################
 
 -
+    title: 'Books can now use their own cover when published as PDF'
+    date:  '2013-08-07'
+    content: |
+        Similarly to ePub books, **easybook** now allows PDF books to define
+        their own covers. First, create a PDF file with the cover and name it
+        `cover.pdf`. Then, save it in any of the following paths (they are
+        listed by priority, meaning that the first `cover.pdf` file is used):
+
+          1. <your-book>/Resources/Templates/<edition-name>/cover.pdf
+          2. <your-book>/Resources/Templates/pdf/cover.pdf
+          3. <your-book>/Resources/Templates/cover.pdf
+
+        The first option is useful when you need to use different covers for
+        different PDF editions of your book (e.g. high quality cover for printing
+        the book, medium quality cover for distributing the book via web, etc.)
+
+        If you are a developer, this new feature required the use of the
+        ZendPdf component of Zend Framework (this means that **easybook** has
+        new dependencies):
+
+          * [c00ff57](https://github.com/javiereguiluz/easybook/commit/c00ff577ae8d2066c2553f235868041990e3a327) Books can now use their own cover when published as PDF
+
+###############################################################################
+
+-
     title: 'Books can now override any easybook global parameter'
     date:  '2013-07-06'
     content: |
@@ -493,6 +518,23 @@
         e-book in just 4 seconds using an old 2010 MacBook Pro.
 
         <iframe width="560" height="315" src="http://www.youtube.com/embed/vtpUqPKyY7M?rel=0" frameborder="0" allowfullscreen></iframe>
+
+###############################################################################
+
+-
+    title: 'easybook is the second most starred PHP project of the day'
+    date:  '2012-04-28'
+    content: |
+        Today we're glad to announce that **easybook** is the second most *starred*
+        PHP project on GitHub, according to the [github.com/languages/PHP](https://github.com/languages/PHP) page.
+
+        For reference purposes, here it is the screenshot of the moment when
+        **easybook** was the second most *starred* PHP project of the day:
+
+        ![easybook project on GitHub](/images/easybook_popular_on_github.png)
+
+        Thank you all for *starring* this project and for your suggestions, ideas,
+        comments, pull requests and error reportings.
 
 ###############################################################################
 
