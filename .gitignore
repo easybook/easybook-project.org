@@ -1,5 +1,6 @@
 /cache/*
 /logs/*
+/templates/documentation/*
 /web/documentation/*
 /vendor/
 composer.lock
