@@ -18,15 +18,19 @@ $app->after(function (Request $request, Response $response) {
 
 // -- DOCUMENTATION -----------------------------------------------------------
 $app->get('/documentation/', function () use ($app) {
-    return $app->redirect('/documentation/index.html');
-});
-$app->get('/documentation/index.html', function () use ($app) {
-    // do nothing, because this controller never gets executed
-    // the web server intercepts it, because the 'index.html'
-    // file exists physically in the web/ directory
-    // this controller is needed to have the proper named route
+    return $app['twig']->render('documentation/index.html');
 })
 ->bind('documentation');
+
+$app->get('/documentation/{slug}', function ($slug) use ($app) {
+    if (!file_exists(__DIR__.'/../templates/documentation/'.$slug)) {
+        $app->abort(404, 'The requested documentation page does not exist.');
+    }
+
+    return $app['twig']->render('documentation/'.$slug);
+})
+->assert('slug', '.*')
+->bind('documentation_page');
 
 // -- BLOG --------------------------------------------------------------------
 $app->get('/blog/{slug}/', function ($slug) use ($app) {
