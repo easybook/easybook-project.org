@@ -18,7 +18,7 @@
 
         **1)** `easybook`, this is the default style and it's based on the
         traditional 4-spaces or tab indentation of code blocks. The difference is 
-        that now you can explicitely set the programming language of the code
+        that now you can explicitly set the programming language of the code
         block by adding the `[language-name]` tag to the first line:
 
         ~~~
