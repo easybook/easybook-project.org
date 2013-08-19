@@ -44,19 +44,20 @@ $console
 $console
     ->register('doc:publish')
     ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
-        $bookDir   = __DIR__.'/../cache/';
-        $webDocDir = __DIR__.'/../web/documentation/';
+        $bookDir = __DIR__.'/../cache/';
+        $docDir  = __DIR__.'/../templates/documentation/';
+        $editionName = 'easybook-project.org';
 
         $process = new Process(sprintf(
-            "easybook publish --dir=%s doc website",
-            $bookDir
+            "easybook publish --dir=%s doc %s",
+            $bookDir, $editionName
         ));
         $process->run();
 
         $fs = new Filesystem();
         $fs->mirror(
-            $bookDir."/doc/Output/website/book",
-            $webDocDir
+            $bookDir."/doc/Output/".$editionName."/book",
+            $docDir
         );
     })
 ;
